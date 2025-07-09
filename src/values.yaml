@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: victoria-metrics-stack
+  namespace: argocd # Or your Argo CD namespace
+spec:
+  project: default
+  source:
+    repoURL: <your-git-repository-url>
+    path: charts/victoria-metrics-stack # Or the path to your values.yaml
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml # Or your specific value file
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring # Or your desired namespace
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true # If you want ArgoCD to create the namespace
